@@ -9,7 +9,7 @@ reverse-engineering experience for the [rx-player
 
 
 
-## How to use it ###############################################################
+## How to install it ###########################################################
 
 ### Including the script directly ##############################################
 
