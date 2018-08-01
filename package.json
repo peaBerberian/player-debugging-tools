@@ -1,0 +1,27 @@
+{
+  "name": "player-debugging-tools",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/bundle.js",
+  "dependencies": {
+    "eme-spy": "^0.1.1",
+    "isobmff-inspector": "^0.1.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^5.2.0",
+    "rollup": "^0.63.4",
+    "rollup-plugin-babel": "^3.0.7",
+    "rollup-plugin-commonjs": "^9.1.4",
+    "rollup-plugin-node-resolve": "^3.3.0"
+  },
+  "scripts": {
+    "builda": "webpack -c webpack.config.js",
+    "build": "rollup -c",
+    "lint": "eslint src/**/*.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "peaberberian",
+  "license": "MIT"
+}
