@@ -1,4 +1,5 @@
 export { EMESpy } from "./EMESpy";
+export { MSESpy } from "./MSESpy";
 export { inspectISOBMFF } from "./inspectISOBMFF";
 export {
   prettyPrintBuffered,

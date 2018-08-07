@@ -78,6 +78,17 @@ All its documentation is available in [its original repository
 ](https://github.com/peaBerberian/EMESpy.js).
 
 
+### MSESpy #####################################################################
+
+Like ``EMESpy``, ``MSESpy`` allows to spy on API calls, but here it is for the
+ones concerning the MediaSource extensions or MSE.
+
+It is accessible through ``PlayerTools.MSESpy``.
+
+All its documentation is available in [its original repository
+](https://github.com/peaBerberian/MSESpy.js).
+
+
 ### inspectISOBMFF #############################################################
 
 ``inspectISOMFF`` is a function allowing you to directly probe ISOBMFF files
