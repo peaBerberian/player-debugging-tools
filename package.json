@@ -1,12 +1,12 @@
 {
   "name": "player-debugging-tools",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "main": "dist/bundle.js",
   "dependencies": {
     "eme-spy": "^0.1.1",
     "isobmff-inspector": "^0.1.0",
-    "mse-spy": "^0.3.0"
+    "mse-spy": "^0.3.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
