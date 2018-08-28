@@ -22,533 +22,21 @@
 	   * Store information about every EME Calls stubbed in this file.
 	   * @type {Object}
 	   */
-	  var EME_CALLS = {
-	    close: [],
-	    createMediaKeys: [],
-	    createSession: [],
-	    generateRequest: [],
-	    getConfiguration: [],
-	    load: [],
-	    remove: [],
-	    requestMediaKeySystemAccess: [],
-	    setMediaKeys: [],
-	    setServerCertificate: [],
-	    update: []
-	  };
+	  var EME_CALLS = {};
 
-	  /**
-	   * Define the logger for startEMESpy.
-	   * Allows to re-define a specific logger on runtime / before applying this
-	   * script.
-	   * @type {Object}
-	   */
-	  var Logger = window.Logger || {
-	    /* eslint-disable no-console */
-	    log: function log() {
-	      var _console;
-
-	      (_console = console).log.apply(_console, arguments);
-	    },
-	    debug: function debug() {
-	      var _console2;
-
-	      (_console2 = console).debug.apply(_console2, arguments);
-	    },
-	    info: function info() {
-	      var _console3;
-
-	      (_console3 = console).info.apply(_console3, arguments);
-	    },
-	    error: function error() {
-	      var _console4;
-
-	      (_console4 = console).error.apply(_console4, arguments);
-	    },
-	    warning: function warning() {
-	      var _console5;
-
-	      (_console5 = console).warning.apply(_console5, arguments);
-	    }
-	    /* eslint-enable no-console */
-	  };
-
-	  /**
-	   * Start spying on EME API calls.
-	   * @returns {Object} - Object with a "restore" function, restoring all stubs
-	   * done here.
-	   */
-	  function startEMESpy() {
-	    /**
-	     * Log when a function is called with its arguments.
-	     * @param {string} fnName
-	     * @param {Array.<*>} args
-	     */
-	    function onAPICall(fnName, args) {
-	      if (args.length) {
-	        Logger.debug(">>> " + fnName + " called with arguments:", args);
-	      } else {
-	        Logger.debug(">>> " + fnName + " called");
-	      }
-	    }
-	    var saveRequestMediaKeySystemAccess = navigator.requestMediaKeySystemAccess;
-	    navigator.requestMediaKeySystemAccess = function () {
-	      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	        args[_key] = arguments[_key];
-	      }
-
-	      onAPICall("navigator.requestMediaKeySystemAccess", args);
-	      var myObj = {
-	        self: this,
-	        date: Date.now(),
-	        args: args
-	      };
-	      EME_CALLS.requestMediaKeySystemAccess.push(myObj);
-
-	      var prom = void 0;
-	      try {
-	        prom = saveRequestMediaKeySystemAccess.apply(navigator, args);
-	      } catch (e) {
-	        Logger.error(">> navigator.requestMediaKeySystemAccess failed:", e);
-	        myObj.error = e;
-	        myObj.errorDate = Date.now();
-	        throw e;
-	      }
-	      myObj.response = prom;
-	      myObj.responseDate = Date.now();
-
-	      prom.then(function (r) {
-	        Logger.debug(">> navigator.requestMediaKeySystemAccess resolved:", r);
-	        myObj.responseResolved = r;
-	        myObj.responseResolvedDate = Date.now();
-	      }, function (e) {
-	        Logger.error(">> navigator.requestMediaKeySystemAccess rejected:", e);
-	        myObj.responseError = e;
-	        myObj.responseErrorDate = Date.now();
-	      });
-	      return prom;
-	    };
-
-	    var saveUpdate = MediaKeySession.prototype.update;
-	    MediaKeySession.prototype.update = function () {
-	      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-	        args[_key2] = arguments[_key2];
-	      }
-
-	      onAPICall("MediaKeySession.prototype.update", args);
-	      var myObj = {
-	        self: this,
-	        date: Date.now(),
-	        args: args
-	      };
-	      EME_CALLS.update.push(myObj);
-	      var prom = void 0;
-	      try {
-	        prom = saveUpdate.apply(this, args);
-	      } catch (e) {
-	        Logger.error(">> MediaKeySession.prototype.update failed:", e);
-	        myObj.error = e;
-	        myObj.errorDate = Date.now();
-	        throw e;
-	      }
-	      myObj.response = prom;
-	      myObj.responseDate = Date.now();
-
-	      prom.then(function (r) {
-	        Logger.debug(">> MediaKeySession.prototype.update resolved:", r);
-	        myObj.responseResolved = r;
-	        myObj.responseResolvedDate = Date.now();
-	      }, function (e) {
-	        Logger.error(">> MediaKeySession.prototype.update rejected:", e);
-	        myObj.responseError = e;
-	        myObj.responseErrorDate = Date.now();
-	      });
-	      return prom;
-	    };
-
-	    var saveload = MediaKeySession.prototype.load;
-	    MediaKeySession.prototype.load = function () {
-	      for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-	        args[_key3] = arguments[_key3];
-	      }
-
-	      onAPICall("MediaKeySession.prototype.load", args);
-	      var myObj = {
-	        self: this,
-	        date: Date.now(),
-	        args: args
-	      };
-	      EME_CALLS.load.push(myObj);
-	      var prom = void 0;
-	      try {
-	        prom = saveload.apply(this, args);
-	      } catch (e) {
-	        Logger.error(">> MediaKeySession.prototype.load failed:", e);
-	        myObj.error = e;
-	        myObj.errorDate = Date.now();
-	        throw e;
-	      }
-	      myObj.response = prom;
-	      myObj.responseDate = Date.now();
-
-	      prom.then(function (r) {
-	        Logger.debug(">> MediaKeySession.prototype.load resolved:", r);
-	        myObj.responseResolved = r;
-	        myObj.responseResolvedDate = Date.now();
-	      }, function (e) {
-	        Logger.error(">> MediaKeySession.prototype.load rejected:", e);
-	        myObj.responseError = e;
-	        myObj.responseErrorDate = Date.now();
-	      });
-	      return prom;
-	    };
-
-	    var saveremove = MediaKeySession.prototype.remove;
-	    MediaKeySession.prototype.remove = function () {
-	      for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-	        args[_key4] = arguments[_key4];
-	      }
-
-	      onAPICall("MediaKeySession.prototype.remove", args);
-	      var myObj = {
-	        self: this,
-	        date: Date.now(),
-	        args: args
-	      };
-	      EME_CALLS.remove.push(myObj);
-	      var prom = void 0;
-	      try {
-	        prom = saveremove.apply(this, args);
-	      } catch (e) {
-	        Logger.error(">> MediaKeySession.prototype.remove failed:", e);
-	        myObj.error = e;
-	        myObj.errorDate = Date.now();
-	        throw e;
-	      }
-	      myObj.response = prom;
-	      myObj.responseDate = Date.now();
-
-	      prom.then(function (r) {
-	        Logger.debug(">> MediaKeySession.prototype.remove resolved:", r);
-	        myObj.responseResolved = r;
-	        myObj.responseResolvedDate = Date.now();
-	      }, function (e) {
-	        Logger.error(">> MediaKeySession.prototype.remove rejected:", e);
-	        myObj.responseError = e;
-	        myObj.responseErrorDate = Date.now();
-	      });
-	      return prom;
-	    };
-
-	    var saveclose = MediaKeySession.prototype.close;
-	    MediaKeySession.prototype.close = function () {
-	      for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-	        args[_key5] = arguments[_key5];
-	      }
-
-	      onAPICall("MediaKeySession.prototype.close", args);
-	      var myObj = {
-	        self: this,
-	        date: Date.now(),
-	        args: args
-	      };
-	      EME_CALLS.close.push(myObj);
-	      var prom = void 0;
-	      try {
-	        prom = saveclose.apply(this, args);
-	      } catch (e) {
-	        Logger.error(">> MediaKeySession.prototype.close failed:", e);
-	        myObj.error = e;
-	        myObj.errorDate = Date.now();
-	        throw e;
-	      }
-	      myObj.response = prom;
-	      myObj.responseDate = Date.now();
-
-	      prom.then(function (r) {
-	        Logger.debug(">> MediaKeySession.prototype.close resolved:", r);
-	        myObj.responseResolved = r;
-	        myObj.responseResolvedDate = Date.now();
-	      }, function (e) {
-	        Logger.error(">> MediaKeySession.prototype.close rejected:", e);
-	        myObj.responseError = e;
-	        myObj.responseErrorDate = Date.now();
-	      });
-	      return prom;
-	    };
-
-	    var savegenerateRequest = MediaKeySession.prototype.generateRequest;
-	    MediaKeySession.prototype.generateRequest = function () {
-	      for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-	        args[_key6] = arguments[_key6];
-	      }
-
-	      onAPICall("MediaKeySession.prototype.generateRequest", args);
-	      var myObj = {
-	        self: this,
-	        date: Date.now(),
-	        args: args
-	      };
-	      EME_CALLS.generateRequest.push(myObj);
-	      var prom = void 0;
-	      try {
-	        prom = savegenerateRequest.apply(this, args);
-	      } catch (e) {
-	        Logger.error(">> MediaKeySession.prototype.generateRequest failed:", e);
-	        myObj.error = e;
-	        myObj.errorDate = Date.now();
-	        throw e;
-	      }
-	      myObj.response = prom;
-	      myObj.responseDate = Date.now();
-
-	      prom.then(function (r) {
-	        Logger.debug(">> MediaKeySession.prototype.generateRequest resolved:", r);
-	        myObj.responseResolved = r;
-	        myObj.responseResolvedDate = Date.now();
-	      }, function (e) {
-	        Logger.error(">> MediaKeySession.prototype.generateRequest rejected:", e);
-	        myObj.responseError = e;
-	        myObj.responseErrorDate = Date.now();
-	      });
-	      return prom;
-	    };
-
-	    var savecreateSession = MediaKeys.prototype.createSession;
-	    MediaKeys.prototype.createSession = function () {
-	      for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
-	        args[_key7] = arguments[_key7];
-	      }
-
-	      onAPICall("MediaKeys.prototype.createSession", args);
-	      var myObj = {
-	        self: this,
-	        date: Date.now(),
-	        args: args
-	      };
-	      EME_CALLS.createSession.push(myObj);
-	      var session = void 0;
-	      try {
-	        session = savecreateSession.apply(this, args);
-	      } catch (e) {
-	        Logger.error(">> MediaKeys.prototype.createSession failed:", e);
-	        myObj.error = e;
-	        myObj.errorDate = Date.now();
-	        throw e;
-	      }
-	      Logger.debug(">> MediaKeys.prototype.createSession succeeded:", session);
-	      myObj.response = session;
-	      myObj.responseDate = Date.now();
-	      return session;
-	    };
-
-	    var savesetServerCertificate = MediaKeys.prototype.setServerCertificate;
-	    MediaKeys.prototype.setServerCertificate = function () {
-	      for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
-	        args[_key8] = arguments[_key8];
-	      }
-
-	      onAPICall("MediaKeys.prototype.setServerCertificate", args);
-	      var myObj = {
-	        self: this,
-	        date: Date.now(),
-	        args: args
-	      };
-	      EME_CALLS.setServerCertificate.push(myObj);
-	      var prom = void 0;
-	      try {
-	        prom = savesetServerCertificate.apply(this, args);
-	      } catch (e) {
-	        Logger.error(">> MediaKeys.prototype.setServerCertificate failed:", e);
-	        myObj.error = e;
-	        myObj.errorDate = Date.now();
-	        throw e;
-	      }
-	      myObj.response = prom;
-	      myObj.responseDate = Date.now();
-
-	      prom.then(function (r) {
-	        Logger.debug(">> MediaKeys.prototype.setServerCertificate resolved:", r);
-	        myObj.responseResolved = r;
-	        myObj.responseResolvedDate = Date.now();
-	      }, function (e) {
-	        Logger.error(">> MediaKeys.prototype.setServerCertificate rejected:", e);
-	        myObj.responseError = e;
-	        myObj.responseErrorDate = Date.now();
-	      });
-	      return prom;
-	    };
-
-	    var savecreateMediaKeys = MediaKeySystemAccess.prototype.createMediaKeys;
-	    MediaKeySystemAccess.prototype.createMediaKeys = function () {
-	      for (var _len9 = arguments.length, args = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
-	        args[_key9] = arguments[_key9];
-	      }
-
-	      onAPICall("MediaKeySystemAccess.prototype.createMediaKeys", args);
-	      var myObj = {
-	        self: this,
-	        date: Date.now(),
-	        args: args
-	      };
-	      EME_CALLS.createMediaKeys.push(myObj);
-	      var prom = void 0;
-	      try {
-	        prom = savecreateMediaKeys.apply(this, args);
-	      } catch (e) {
-	        Logger.error(">> MediaKeySystemAccess.prototype.createMediaKeys failed:", e);
-	        myObj.error = e;
-	        myObj.errorDate = Date.now();
-	        throw e;
-	      }
-	      myObj.response = prom;
-	      myObj.responseDate = Date.now();
-
-	      prom.then(function (r) {
-	        Logger.debug(">> MediaKeySystemAccess.prototype.createMediaKeys resolved:", r);
-	        myObj.responseResolved = r;
-	        myObj.responseResolvedDate = Date.now();
-	      }, function (e) {
-	        Logger.error(">> MediaKeySystemAccess.prototype.createMediaKeys rejected:", e);
-	        myObj.responseError = e;
-	        myObj.responseErrorDate = Date.now();
-	      });
-	      return prom;
-	    };
-
-	    var savegetConfiguration = MediaKeySystemAccess.prototype.getConfiguration;
-	    MediaKeySystemAccess.prototype.getConfiguration = function () {
-	      for (var _len10 = arguments.length, args = Array(_len10), _key10 = 0; _key10 < _len10; _key10++) {
-	        args[_key10] = arguments[_key10];
-	      }
-
-	      onAPICall("MediaKeySystemAccess.prototype.getConfiguration", args);
-	      var myObj = {
-	        self: this,
-	        date: Date.now(),
-	        args: args
-	      };
-	      EME_CALLS.getConfiguration.push(myObj);
-	      var mk = void 0;
-	      try {
-	        mk = savegetConfiguration.apply(this, args);
-	      } catch (e) {
-	        Logger.error(">> MediaKeySystemAccess.prototype.getConfiguration failed:", e);
-	        myObj.error = e;
-	        myObj.errorDate = Date.now();
-	        throw e;
-	      }
-	      Logger.debug(">> MediaKeySystemAccess.prototype.getConfiguration succeeded:", mk);
-	      myObj.response = mk;
-	      myObj.responseDate = Date.now();
-	      return mk;
-	    };
-
-	    var savesetMediaKeys = HTMLMediaElement.prototype.setMediaKeys;
-	    HTMLMediaElement.prototype.setMediaKeys = function () {
-	      for (var _len11 = arguments.length, args = Array(_len11), _key11 = 0; _key11 < _len11; _key11++) {
-	        args[_key11] = arguments[_key11];
-	      }
-
-	      onAPICall("HTMLMediaElement.prototype.setMediaKeys", args);
-	      var myObj = {
-	        self: this,
-	        date: Date.now(),
-	        args: args
-	      };
-	      EME_CALLS.setMediaKeys.push(myObj);
-	      var prom = void 0;
-	      try {
-	        prom = savesetMediaKeys.apply(this, args);
-	      } catch (e) {
-	        Logger.error(">> HTMLMediaElement.prototype.setMediaKeys failed:", e);
-	        myObj.error = e;
-	        myObj.errorDate = Date.now();
-	        throw e;
-	      }
-	      myObj.response = prom;
-	      myObj.responseDate = Date.now();
-
-	      prom.then(function (r) {
-	        Logger.debug(">> HTMLMediaElement.prototype.setMediaKeys resolved:", r);
-	        myObj.responseResolved = r;
-	        myObj.responseResolvedDate = Date.now();
-	      }, function (e) {
-	        Logger.error(">> HTMLMediaElement.prototype.setMediaKeys rejected:", e);
-	        myObj.responseError = e;
-	        myObj.responseErrorDate = Date.now();
-	      });
-	      return prom;
-	    };
-
-	    return {
-	      restore: function restore() {
-	        navigator.requestMediaKeySystemAccess = saveRequestMediaKeySystemAccess;
-
-	        MediaKeySession.prototype.update = saveUpdate;
-	        MediaKeySession.prototype.load = saveload;
-	        MediaKeySession.prototype.close = saveclose;
-	        MediaKeySession.prototype.remove = saveremove;
-	        MediaKeySession.prototype.generateRequest = savegenerateRequest;
-
-	        MediaKeys.prototype.createSession = savecreateSession;
-	        MediaKeys.prototype.setServerCertificate = savesetServerCertificate;
-	        MediaKeySystemAccess.prototype.createMediaKeys = savecreateMediaKeys;
-	        MediaKeySystemAccess.prototype.getConfiguration = savegetConfiguration;
-
-	        HTMLMediaElement.prototype.setMediaKeys = savesetMediaKeys;
-	      }
-	    };
+	  function getEMECalls() {
+	    return EME_CALLS;
 	  }
 
-	  exports.EME_CALLS = EME_CALLS;
-	  exports.Logger = Logger;
-	  exports.startEMESpy = startEMESpy;
-
-	  Object.defineProperty(exports, '__esModule', { value: true });
-
-	})));
-	});
-
-	var EMESpy = unwrapExports(bundle);
-
-	var bundle$1 = createCommonjsModule(function (module, exports) {
-	(function (global, factory) {
-	  factory(exports);
-	}(commonjsGlobal, (function (exports) {
-	  /**
-	   * Store information about every MSE Calls stubbed in this file.
-	   * @type {Object}
-	   */
-	  var MSE_CALLS = {
-	    MediaSource: {
-	      new: [], // TODO
-	      methods: {},
-	      properties: {}
-	    },
-	    SourceBuffer: {
-	      new: [], // TODO
-	      methods: {},
-	      properties: {}
-	    }
-	  };
-
-	  function getMSECalls() {
-	    return MSE_CALLS;
+	  function resetEMECalls() {
+	    Object.keys(EME_CALLS).forEach(function (key) {
+	      delete EME_CALLS[key];
+	    });
 	  }
 
-	  function resetMSECalls() {
-	    MSE_CALLS.MediaSource.new = [];
-	    MSE_CALLS.MediaSource.methods = [];
-	    MSE_CALLS.MediaSource.properties = [];
-	    MSE_CALLS.MediaSource.events = [];
-
-	    MSE_CALLS.SourceBuffer.new = [];
-	    MSE_CALLS.SourceBuffer.methods = [];
-	    MSE_CALLS.SourceBuffer.properties = [];
-	    MSE_CALLS.SourceBuffer.events = [];
-	  }
-	  var NativeMediaSource = window.MediaSource;
-	  var NativeSourceBuffer = window.SourceBuffer;
+	  var NativeMediaKeys = window.MediaKeys;
+	  var NativeMediaKeySession = window.MediaKeySession;
+	  var NativeMediaKeySystemAccess = window.MediaKeySystemAccess;
 
 	  /**
 	   * Define the logger for the MSE-spy.
@@ -565,7 +53,7 @@
 	     * @param {*} value - the value it currently has.
 	     */
 	    onPropertyAccess: function onPropertyAccess(pathString, value) {
-	      console.debug(">>> Getting ${pathString}:", value);
+	      console.debug(">>> Getting " + pathString + ":", value);
 	    },
 
 
@@ -586,9 +74,9 @@
 	     */
 	    onObjectInstanciation: function onObjectInstanciation(objectName, args) {
 	      if (args.length) {
-	        console.debug(">>> Creating ${objectName} with arguments:", args);
+	        console.debug(">>> Creating " + objectName + " with arguments:", args);
 	      } else {
-	        console.debug(">>> Creating ${objectName}");
+	        console.debug(">>> Creating " + objectName);
 	      }
 	    },
 
@@ -599,7 +87,7 @@
 	     * @param {Error} error - Error thrown by the constructor
 	     */
 	    onObjectInstanciationError: function onObjectInstanciationError(objectName, error) {
-	      console.error(">> ${objectName} creation failed:", error);
+	      console.error(">> " + objectName + " creation failed:", error);
 	    },
 
 
@@ -609,7 +97,7 @@
 	     * @param {*} value - The corresponding object instanciated.
 	     */
 	    onObjectInstanciationSuccess: function onObjectInstanciationSuccess(objectName, value) {
-	      console.debug(">>> ${objectName} created:", value);
+	      console.debug(">>> " + objectName + " created:", value);
 	    },
 
 
@@ -643,290 +131,1194 @@
 	     * @param {*} value - The result of the function
 	     */
 	    onFunctionCallSuccess: function onFunctionCallSuccess(pathName, value) {
-	      console.info(">>> ${pathName} succeeded:", value);
+	      console.info(">>> " + pathName + " succeeded:", value);
+	    },
+
+
+	    /**
+	     * Triggered when a function returned a Promise and that promise resolved.
+	     * @param {string} pathName - human-readable path for the concerned function.
+	     * @param {*} value - The value when the function resolved.
+	     */
+	    onFunctionPromiseResolve: function onFunctionPromiseResolve(pathName, value) {
+	      console.info(">>> " + pathName + " resolved:", value);
+	    },
+
+
+	    /**
+	     * Triggered when a function returned a Promise and that promise rejected.
+	     * @param {string} pathName - human-readable path for the concerned function.
+	     * @param {*} value - The error when the function's promise rejected.
+	     */
+	    onFunctionPromiseReject: function onFunctionPromiseReject(pathName, value) {
+	      console.error(">>> " + pathName + " rejected:", value);
 	    }
 	  };
 
-	  function stubRegularMethods(obj, methods, path, logObj) {
+	  var id = 0;
+
+	  /**
+	   * Generate a new number each time it is called.
+	   * /!\ Never check for an upper-bound. Please do not use if you can reach
+	   * `Number.MAX_VALUE`
+	   * @returns {number}
+	   */
+	  function generateId() {
+	    return id++;
+	  }
+
+	  /**
+	   * Log multiple method calls for an object.
+	   * Also populates an object with multiple data at the time of the call.
+	   *
+	   * @param {Object} baseObject - Object in which the method/function is.
+	   * For example to spy on the Date method `toLocaleDateString`, you will have to
+	   * set here `Date.prototype`.
+	   * @param {Array.<string>} methodNames - Every methods you want to spy on
+	   * @param {string} humanReadablePath - Path to the method. Used for logging
+	   * purposes.
+	   * For example `"Date.prototype"`, for spies of Date's methods.
+	   * @param {Object} logObject - Object where infos about the method calls will be
+	   * added.
+	   * The methods' name will be the key of the object.
+	   *
+	   * The values will be an array of object with the following properties:
+	   *
+	   *   - self {Object}: Reference to the baseObject argument.
+	   *
+	   *   - id {number}: a uniquely generated ascending ID for any stubbed
+	   *    property/methods with this library.
+	   *
+	   *   - date {number}: Timestamp at the time of the call.
+	   *
+	   *   - args {Array}: Array of arguments given to the function
+	   *
+	   *   - response {*}: Response of the function.
+	   *     The property is not defined if the function did not respond yet or was on
+	   *     error.
+	   *
+	   *   - responseDate {number}: Timestamp at the time of the response.
+	   *     The property is not defined if the function did not respond yet or was on
+	   *     error.
+	   *
+	   *   - error {*}: Error thrown by the function, if one.
+	   *     The property is not defined if the function did not throw.
+	   *
+	   *   - errorDate {number} Timestamp at the time of the error.
+	   *     The property is not defined if the function did not throw.
+	   *
+	   *   - responseResolved {*}: When the returned value (the response) is a promise
+	   *     and that promise resolved, this property contains the value emitted by
+	   *     the resolve. Else, that property is not set.
+	   *
+	   *   - responseResolvedDate {number}: When the returned value (the response) is
+	   *     a promise and that promise resolved, this property contains the date at
+	   *     which the promise resolved. Else, that property is not set.
+	   *
+	   *   - responseRejected {*}: When the returned value (the response) is a promise
+	   *     and that promise rejected, this property contains the error emitted by
+	   *     the reject. Else, that property is not set.
+	   *
+	   *   - responseRejectedDate {number}: When the returned value (the response) is
+	   *     a promise and that promise rejected, this property contains the date at
+	   *     which the promise rejected. Else, that property is not set.
+	   *
+	   * @returns {Function} - function which deactivates the spy when called.
+	   */
+	  function spyOnMethods(baseObject, methodNames, humanReadablePath, logObject) {
+	    var baseObjectMethods = methodNames.reduce(function (acc, methodName) {
+	      acc[methodName] = baseObject[methodName];
+	      return acc;
+	    }, {});
+
 	    var _loop = function _loop(i) {
-	      var methodName = methods[i];
-	      var completePath = path + "." + methodName;
-	      var oldMethod = obj[methodName];
+	      var methodName = methodNames[i];
+	      var completePath = humanReadablePath + "." + methodName;
+	      var oldMethod = baseObject[methodName];
 
 	      if (!oldMethod) {
 	        throw new Error("No method in " + completePath);
 	      }
 
-	      obj[methodName] = function () {
+	      baseObject[methodName] = function () {
 	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
 	          args[_key] = arguments[_key];
 	        }
 
 	        Logger.onFunctionCall(completePath, args);
-	        var myObj = {
-	          self: obj,
+	        var currentLogObject = {
+	          self: baseObject,
+	          id: generateId(),
 	          date: Date.now(),
 	          args: args
 	        };
 
-	        if (!logObj[methodName]) {
-	          logObj[methodName] = [];
+	        if (!logObject[methodName]) {
+	          logObject[methodName] = [];
 	        }
-	        logObj[methodName].push(myObj);
+	        logObject[methodName].push(currentLogObject);
 
 	        var res = void 0;
 	        try {
 	          res = oldMethod.apply(this, args);
 	        } catch (e) {
 	          Logger.onFunctionCallError(completePath, e);
-	          myObj.error = e;
-	          myObj.errorDate = Date.now();
+	          currentLogObject.error = e;
+	          currentLogObject.errorDate = Date.now();
 	          throw e;
 	        }
 	        Logger.onFunctionCallSuccess(completePath, res);
-	        myObj.response = res;
-	        myObj.responseDate = Date.now();
+	        currentLogObject.response = res;
+	        currentLogObject.responseDate = Date.now();
+
+	        if (res instanceof Promise) {
+	          res.then(
+	          // on success
+	          function (value) {
+	            Logger.onFunctionPromiseResolve(completePath, value);
+	            currentLogObject.responseResolved = value;
+	            currentLogObject.responseResolvedDate = Date.now();
+	          },
+
+	          // on error
+	          function (err) {
+	            Logger.onFunctionPromiseReject(completePath, err);
+	            currentLogObject.responseRejected = err;
+	            currentLogObject.responseRejectedDate = Date.now();
+	          });
+	        }
 	        return res;
 	      };
 	    };
 
-	    for (var i = 0; i < methods.length; i++) {
+	    for (var i = 0; i < methodNames.length; i++) {
 	      _loop(i);
 	    }
+
+	    return function stopSpyingOnMethods() {
+	      for (var i = 0; i < methodNames.length; i++) {
+	        var _methodName = methodNames[i];
+	        baseObject[_methodName] = baseObjectMethods[_methodName];
+	      }
+	    };
 	  }
 
-	  function stubReadOnlyProperties(obj, oldDescriptors, properties, path, logObj) {
+	  /**
+	   * Spy access and updates of an Object's read-only properties:
+	   *   - log every access/updates
+	   *   - add entries in a logging object
+	   *
+	   * @param {Object} baseObject - Object in which the property is.
+	   * For example to spy on the HTMLMediaElement property `currentTime`, you will
+	   * have to set here `HTMLMediaElement.prototype`.
+	   * @param {Object} baseDescriptors - Descriptors for the spied properties.
+	   * The keys are the properties' names, the values are the properties'
+	   * descriptors.
+	   * @param {Array.<string>} propertyNames - Every properties you want to spy on.
+	   * @param {string} humanReadablePath - Path to the property. Used for logging
+	   * purposes.
+	   * For example `"HTMLMediaElement.prototype"`, for spies of HTMLMediaElement's
+	   * class properties.
+	   * @param {Object} logObject - Object where infos about the properties access
+	   * will be added.
+	   * The methods' name will be the key of the object.
+	   *
+	   * The values will be an object with a single key ``get``, corresponding to
+	   * property accesses
+	   *
+	   * This key will then have as value an array of object.
+	   *
+	   *  - self {Object}: Reference to the baseObject argument.
+	   *
+	   *  - id {number}: a uniquely generated ID for any stubbed property/methods with
+	   *    this library.
+	   *
+	   *  - date {number}: Timestamp at the time of the property access.
+	   *
+	   *  - value {*}: value of the property at the time of access.
+	   *
+	   * @returns {Function} - function which deactivates the spy when called.
+	   */
+	  function spyOnReadOnlyProperties(baseObject, baseDescriptors, propertyNames, humanReadablePath, logObject) {
 	    var _loop = function _loop(i) {
-	      var propertyName = properties[i];
-	      var oldDescriptor = oldDescriptors[propertyName];
-	      var completePath = path + "." + propertyName;
+	      var propertyName = propertyNames[i];
+	      var baseDescriptor = baseDescriptors[propertyName];
+	      var completePath = humanReadablePath + "." + propertyName;
 
-	      if (!oldDescriptor) {
+	      if (!baseDescriptor) {
 	        throw new Error("No descriptor for property " + completePath);
 	      }
 
-	      Object.defineProperty(obj, propertyName, {
+	      Object.defineProperty(baseObject, propertyName, {
 	        get: function get() {
+	          var value = baseDescriptor.get.bind(this)();
 	          Logger.onPropertyAccess(completePath, value);
-	          var value = oldDescriptor.get.bind(this)();
-	          var myObj = {
+	          var currentLogObject = {
 	            self: this,
+	            id: generateId(),
 	            date: Date.now(),
 	            value: value
 	          };
-	          if (!logObj[propertyName]) {
-	            logObj[propertyName] = {
+	          if (!logObject[propertyName]) {
+	            logObject[propertyName] = {
 	              get: []
 	            };
 	          }
-	          logObj[propertyName].get.push(myObj);
+	          logObject[propertyName].get.push(currentLogObject);
 	          return value;
 	        }
 	      });
 	    };
 
-	    for (var i = 0; i < properties.length; i++) {
+	    for (var i = 0; i < propertyNames.length; i++) {
 	      _loop(i);
 	    }
+
+	    return function stopSpyingOnReadOnlyProperties() {
+	      Object.defineProperties(baseObject, propertyNames.reduce(function (acc, propertyName) {
+	        acc[propertyName] = baseDescriptors[propertyName];
+	        return acc;
+	      }, {}));
+	    };
 	  }
 
-	  function stubProperties(obj, oldDescriptors, properties, path, logObj) {
+	  /**
+	   * Spy access and updates of an Object's read & write properties:
+	   *   - log every access/updates
+	   *   - add entries in a logging object
+	   *
+	   * @param {Object} baseObject - Object in which the property is.
+	   * For example to spy on the HTMLMediaElement property `currentTime`, you will
+	   * have to set here `HTMLMediaElement.prototype`.
+	   * @param {Object} baseDescriptors - Descriptors for the spied properties.
+	   * The keys are the properties' names, the values are the properties'
+	   * descriptors.
+	   * @param {Array.<string>} propertyNames - Every properties you want to spy on.
+	   * @param {string} humanReadablePath - Path to the property. Used for logging
+	   * purposes.
+	   * For example `"HTMLMediaElement.prototype"`, for spies of HTMLMediaElement's
+	   * class properties.
+	   * @param {Object} logObject - Object where infos about the properties access
+	   * will be added.
+	   * The methods' name will be the key of the object.
+	   *
+	   * The values will be an object with two keys ``get`` and ``set``, respectively
+	   * for property accesses and property updates.
+	   *
+	   * Each one of those properties will then have as values an array of object.
+	   * Those objects are under the following form:
+	   *
+	   *  1. for `get` (property access):
+	   *
+	   *   - self {Object}: Reference to the baseObject argument.
+	   *
+	   *  - id {number}: a uniquely generated ascending ID for any stubbed
+	   *    property/methods with this library.
+	   *
+	   *   - date {number}: Timestamp at the time of the property access.
+	   *
+	   *   - value {*}: value of the property at the time of access.
+	   *
+	   *
+	   *  2. for `set` (property updates):
+	   *
+	   *   - self {Object}: Reference to the baseObject argument.
+	   *
+	   *  - id {number}: a uniquely generated ascending ID for any stubbed
+	   *    property/methods with this library.
+	   *
+	   *   - date {number}: Timestamp at the time of the property update.
+	   *
+	   *   - value {*}: new value the property is set to
+	   *
+	   * @returns {Function} - function which deactivates the spy when called.
+	   */
+	  function spyOnProperties(baseObject, baseDescriptors, propertyNames, humanReadablePath, logObject) {
 	    var _loop = function _loop(i) {
-	      var propertyName = properties[i];
-	      var oldDescriptor = oldDescriptors[propertyName];
-	      var completePath = path + "." + propertyName;
+	      var propertyName = propertyNames[i];
+	      var baseDescriptor = baseDescriptors[propertyName];
+	      var completePath = humanReadablePath + "." + propertyName;
 
-	      if (!oldDescriptor) {
+	      if (!baseDescriptor) {
 	        throw new Error("No descriptor for property " + completePath);
 	      }
 
-	      Object.defineProperty(obj, propertyName, {
+	      Object.defineProperty(baseObject, propertyName, {
 	        get: function get() {
+	          var value = baseDescriptor.get.bind(this)();
 	          Logger.onPropertyAccess(completePath, value);
-	          var value = oldDescriptor.get.bind(this)();
-	          var myObj = {
+	          var currentLogObject = {
 	            self: this,
+	            id: generateId(),
 	            date: Date.now(),
 	            value: value
 	          };
 
-	          if (!logObj[propertyName]) {
-	            logObj[propertyName] = {
+	          if (!logObject[propertyName]) {
+	            logObject[propertyName] = {
 	              set: [],
 	              get: []
 	            };
 	          }
-	          logObj[propertyName].get.push(myObj);
+	          logObject[propertyName].get.push(currentLogObject);
 
 	          return value;
 	        },
 	        set: function set(value) {
 	          Logger.onSettingProperty(completePath, value);
-	          var myObj = {
+	          var currentLogObject = {
 	            self: this,
+	            id: generateId(),
 	            date: Date.now(),
 	            value: value
 	          };
 
-	          if (!logObj[propertyName]) {
-	            logObj[propertyName] = {
+	          if (!logObject[propertyName]) {
+	            logObject[propertyName] = {
 	              set: [],
 	              get: []
 	            };
 	          }
-	          logObj[propertyName].set.push(myObj);
-	          oldDescriptor.set.bind(this)(value);
+	          logObject[propertyName].set.push(currentLogObject);
+	          baseDescriptor.set.bind(this)(value);
 	        }
 	      });
 	    };
 
-	    for (var i = 0; i < properties.length; i++) {
+	    for (var i = 0; i < propertyNames.length; i++) {
 	      _loop(i);
 	    }
-	  }
 
-	  var MEDIASOURCE_SPY_OBJECT = {
-	    readOnlyProperties: ["sourceBuffers", "activeSourceBuffers", "readyState"],
-	    properties: ["duration", "onsourceopen", "onsourceended", "onsourceclose"],
-	    staticMethods: ["isTypeSupported"],
-	    methods: ["addEventListener", "removeEventListener", "dispatchEvent", "addSourceBuffer", "removeSourceBuffer", "endOfStream", "setLiveSeekableRange", "clearLiveSeekableRange"]
-	  };
-
-	  var NativeMediaSourceProtoDescriptors = Object.getOwnPropertyDescriptors(NativeMediaSource.prototype);
-
-	  var NativeMediaSourceStaticMethods = MEDIASOURCE_SPY_OBJECT.staticMethods.reduce(function (acc, methodName) {
-	    acc[methodName] = NativeMediaSource[methodName];
-	    return acc;
-	  }, {});
-	  var NativeMediaSourceMethods = MEDIASOURCE_SPY_OBJECT.methods.reduce(function (acc, methodName) {
-	    acc[methodName] = NativeMediaSource.prototype[methodName];
-	    return acc;
-	  }, {});
-
-	  function StubbedMediaSource() {
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    Logger.onObjectInstanciation("MediaSource", args);
-	    var now = Date.now();
-	    var spyObj = {
-	      date: now,
-	      args: args
+	    return function stopSpyingOnProperties() {
+	      Object.defineProperties(baseObject, propertyNames.reduce(function (acc, propertyName) {
+	        acc[propertyName] = baseDescriptors[propertyName];
+	        return acc;
+	      }, {}));
 	    };
-	    MSE_CALLS.MediaSource.new.push(spyObj);
-	    var nativeMediaSource = void 0;
-	    try {
-	      nativeMediaSource = new (Function.prototype.bind.apply(NativeMediaSource, [null].concat(args)))();
-	    } catch (e) {
-	      Logger.onObjectInstanciationError("MediaSource", e);
-	      spyObj.error = e;
-	      spyObj.errorDate = Date.now();
-	      throw e;
-	    }
-	    Logger.onObjectInstanciationSuccess("MediaSource", nativeMediaSource);
-	    spyObj.response = nativeMediaSource;
-	    spyObj.responseDate = Date.now();
-	    return nativeMediaSource;
 	  }
 
-	  function spyOnMediaSource() {
-	    stubReadOnlyProperties(NativeMediaSource.prototype, NativeMediaSourceProtoDescriptors, MEDIASOURCE_SPY_OBJECT.readOnlyProperties, "MediaSource.prototype", MSE_CALLS.MediaSource.properties);
-	    stubRegularMethods(NativeMediaSource, MEDIASOURCE_SPY_OBJECT.staticMethods, "MediaSource", MSE_CALLS.MediaSource.methods);
-	    stubProperties(NativeMediaSource.prototype, NativeMediaSourceProtoDescriptors, MEDIASOURCE_SPY_OBJECT.properties, "MediaSource.prototype", MSE_CALLS.MediaSource.properties);
-	    stubRegularMethods(NativeMediaSource.prototype, MEDIASOURCE_SPY_OBJECT.methods, "MediaSource.prototype", MSE_CALLS.MediaSource.methods);
-	    window.MediaSource = StubbedMediaSource;
-	  }
-
-	  function stopSpyingOnMediaSource() {
-	    Object.defineProperties(NativeMediaSource.prototype, MEDIASOURCE_SPY_OBJECT.properties.concat(MEDIASOURCE_SPY_OBJECT.readOnlyProperties).reduce(function (acc, propertyName) {
-	      acc[propertyName] = NativeMediaSourceProtoDescriptors[propertyName];
-	    }, {}));
-	    MEDIASOURCE_SPY_OBJECT.staticMethods.forEach(function (methodName) {
-	      NativeMediaSource[methodName] = NativeMediaSourceStaticMethods[methodName];
-	    });
-	    MEDIASOURCE_SPY_OBJECT.methods.forEach(function (methodName) {
-	      NativeMediaSource.prototype[methodName] = NativeMediaSourceMethods[methodName];
-	    });
-	    window.MediaSource = NativeMediaSource;
-	  }
-
-	  var SOURCEBUFFER_SPY_OBJECT = {
-	    readOnlyProperties: ["updating", "buffered"],
-	    properties: ["mode", "timestampOffset", "appendWindowStart", "appendWindowEnd", "onupdate", "onupdatestart", "onupdateend", "onerror", "onabort"],
-	    staticMethods: [],
-	    methods: ["addEventListener", "removeEventListener", "dispatchEvent", "appendBuffer", "abort", "remove"]
-	  };
-
-	  var NativeSourceBufferProtoDescriptors = Object.getOwnPropertyDescriptors(NativeSourceBuffer.prototype);
-
-	  var NativeSourceBufferStaticMethods = SOURCEBUFFER_SPY_OBJECT.staticMethods.reduce(function (acc, methodName) {
-	    acc[methodName] = NativeSourceBuffer[methodName];
-	    return acc;
-	  }, {});
-	  var NativeSourceBufferMethods = SOURCEBUFFER_SPY_OBJECT.methods.reduce(function (acc, methodName) {
-	    acc[methodName] = NativeSourceBuffer.prototype[methodName];
-	    return acc;
-	  }, {});
-
-	  function StubbedSourceBuffer() {
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
+	  function spyOnWholeObject(BaseObject, objectName, readOnlyPropertyNames, propertyNames, staticMethodNames, methodNames, loggingObject) {
+	    if (BaseObject == null || !BaseObject.prototype) {
+	      throw new Error("Invalid object");
 	    }
 
-	    Logger.onObjectInstanciation("SourceBuffer", args);
-	    var now = Date.now();
-	    var spyObj = {
-	      date: now,
-	      args: args
+	    if (loggingObject[objectName] == null) {
+	      loggingObject[objectName] = {
+	        new: [],
+	        methods: {},
+	        staticMethods: {},
+	        properties: {},
+	        eventListeners: {} // TODO
+	      };
+	    }
+
+	    function StubbedObject() {
+	      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	        args[_key] = arguments[_key];
+	      }
+
+	      Logger.onObjectInstanciation(objectName, args);
+	      var now = Date.now();
+	      var spyObj = {
+	        date: now,
+	        args: args
+	      };
+	      loggingObject[objectName].new.push(spyObj);
+	      var baseObject = void 0;
+	      try {
+	        baseObject = new (Function.prototype.bind.apply(BaseObject, [null].concat(args)))();
+	      } catch (e) {
+	        Logger.onObjectInstanciationError(objectName, e);
+	        spyObj.error = e;
+	        spyObj.errorDate = Date.now();
+	        throw e;
+	      }
+	      Logger.onObjectInstanciationSuccess(objectName, baseObject);
+	      spyObj.response = baseObject;
+	      spyObj.responseDate = Date.now();
+	      return baseObject;
+	    }
+
+	    var unspyStaticMethods = spyOnMethods(BaseObject, staticMethodNames, objectName, loggingObject[objectName].staticMethods);
+	    staticMethodNames.forEach(function (method) {
+	      StubbedObject[method] = BaseObject[method].bind(BaseObject);
+	    });
+
+	    var BaseObjectProtoDescriptors = Object.getOwnPropertyDescriptors(BaseObject.prototype);
+
+	    var unspyReadOnlyProps = spyOnReadOnlyProperties(BaseObject.prototype, BaseObjectProtoDescriptors, readOnlyPropertyNames, objectName + ".prototype", loggingObject[objectName].properties);
+	    var unspyProps = spyOnProperties(BaseObject.prototype, BaseObjectProtoDescriptors, propertyNames, objectName + ".prototype", loggingObject[objectName].properties);
+	    var unspyMethods = spyOnMethods(BaseObject.prototype, methodNames, objectName + ".prototype", loggingObject[objectName].methods);
+	    window[objectName] = StubbedObject;
+
+	    return function stopSpying() {
+	      unspyReadOnlyProps();
+	      unspyProps();
+	      unspyStaticMethods();
+	      unspyMethods();
+	      window[objectName] = BaseObject;
 	    };
-	    MSE_CALLS.SourceBuffer.new.push(spyObj);
-	    var nativeSourceBuffer = void 0;
-	    try {
-	      nativeSourceBuffer = new (Function.prototype.bind.apply(NativeSourceBuffer, [null].concat(args)))();
-	    } catch (e) {
-	      Logger.onObjectInstanciationError("SourceBuffer", e);
-	      spyObj.error = e;
-	      spyObj.errorDate = Date.now();
-	      throw e;
+	  }
+
+	  function spyOnMediaKeys() {
+	    return spyOnWholeObject(
+	    // Object to spy on
+	    NativeMediaKeys,
+
+	    // name in window
+	    "MediaKeys",
+
+	    // read-only properties
+	    [],
+
+	    // regular properties
+	    [],
+
+	    // static methods
+	    [],
+
+	    // methods
+	    ["createSession", "setServerCertificate"],
+
+	    // global logging object
+	    EME_CALLS);
+	  }
+
+	  function spyOnMediaKeySession() {
+	    return spyOnWholeObject(
+	    // Object to spy on
+	    NativeMediaKeySession,
+
+	    // name in window
+	    "MediaKeySession",
+
+	    // read-only properties
+	    ["sessionId", "expiration", "closed", "keyStatuses"],
+
+	    // regular properties
+	    [],
+
+	    // static methods
+	    [],
+
+	    // methods
+	    ["generateRequest", "load", "update", "close", "remove"],
+
+	    // global logging object
+	    EME_CALLS);
+	  }
+
+	  function spyOnMediaKeySystemAccess() {
+	    return spyOnWholeObject(
+	    // Object to spy on
+	    NativeMediaKeySystemAccess,
+
+	    // name in window
+	    "MediaKeySystemAccess",
+
+	    // read-only properties
+	    ["keySystem"],
+
+	    // regular properties
+	    [],
+
+	    // static methods
+	    [],
+
+	    // methods
+	    ["getConfiguration", "createMediaKeys"],
+
+	    // global logging object
+	    EME_CALLS);
+	  }
+
+	  function spyOnRequestMediaKeySystemAccess() {
+	    return spyOnMethods(navigator, ["requestMediaKeySystemAccess"], "navigator", EME_CALLS);
+	  }
+
+	  function spyOnSetMediaKeys() {
+	    return spyOnMethods(HTMLMediaElement.prototype, ["setMediaKeys"], "HTMLMediaElement.prototype", EME_CALLS);
+	  }
+
+	  var resetSpies = null;
+
+	  /**
+	   * Start/restart spying on EME API calls.
+	   */
+	  function start() {
+	    if (resetSpies != null) {
+	      resetSpies();
 	    }
-	    Logger.onObjectInstanciationSuccess("SourceBuffer", nativeSourceBuffer);
-	    spyObj.response = nativeSourceBuffer;
-	    spyObj.responseDate = Date.now();
-	    return nativeSourceBuffer;
-	  }
 
-	  function spyOnSourceBuffer() {
-	    stubReadOnlyProperties(NativeSourceBuffer.prototype, NativeSourceBufferProtoDescriptors, SOURCEBUFFER_SPY_OBJECT.readOnlyProperties, "SourceBuffer.prototype", MSE_CALLS.SourceBuffer.properties);
-	    stubProperties(NativeSourceBuffer.prototype, NativeSourceBufferProtoDescriptors, SOURCEBUFFER_SPY_OBJECT.properties, "SourceBuffer.prototype", MSE_CALLS.SourceBuffer.properties);
-	    stubRegularMethods(NativeSourceBuffer.prototype, SOURCEBUFFER_SPY_OBJECT.methods, "SourceBuffer.prototype", MSE_CALLS.SourceBuffer.methods);
-	    window.SourceBuffer = StubbedSourceBuffer;
-	  }
+	    var resetSpyFunctions = [spyOnMediaKeys(), spyOnMediaKeySession(), spyOnMediaKeySystemAccess(), spyOnRequestMediaKeySystemAccess(), spyOnSetMediaKeys()].filter(function (cb) {
+	      return cb;
+	    });
 
-	  function stopSpyingOnSourceBuffer() {
-	    Object.defineProperties(NativeSourceBuffer.prototype, SOURCEBUFFER_SPY_OBJECT.properties.concat(SOURCEBUFFER_SPY_OBJECT.readOnlyProperties).reduce(function (acc, propertyName) {
-	      acc[propertyName] = NativeSourceBufferProtoDescriptors[propertyName];
-	    }, {}));
-	    SOURCEBUFFER_SPY_OBJECT.staticMethods.forEach(function (methodName) {
-	      NativeSourceBuffer[methodName] = NativeSourceBufferStaticMethods[methodName];
-	    });
-	    SOURCEBUFFER_SPY_OBJECT.methods.forEach(function (methodName) {
-	      NativeSourceBuffer.prototype[methodName] = NativeSourceBufferMethods[methodName];
-	    });
-	    window.SourceBuffer = NativeSourceBuffer;
+	    resetSpies = function resetEverySpies() {
+	      resetSpyFunctions.forEach(function (fn) {
+	        fn && fn();
+	      });
+	      resetSpyFunctions.length = 0;
+	      resetSpies = null;
+	    };
 	  }
 
 	  /**
-	   * Start spying on MSE API calls.
+	   * Stop spying on EME API calls.
 	   */
-	  function start() {
-	    spyOnMediaSource();
-	    spyOnSourceBuffer();
+	  function stop() {
+	    if (resetSpies != null) {
+	      resetSpies();
+	    }
 	  }
 
+	  exports.getEMECalls = getEMECalls;
+	  exports.resetEMECalls = resetEMECalls;
+	  exports.Logger = Logger;
+	  exports.start = start;
+	  exports.stop = stop;
+
+	  Object.defineProperty(exports, '__esModule', { value: true });
+
+	})));
+	});
+
+	var EMESpy = unwrapExports(bundle);
+
+	var bundle$1 = createCommonjsModule(function (module, exports) {
+	(function (global, factory) {
+	  factory(exports);
+	}(commonjsGlobal, (function (exports) {
+	  /**
+	   * Store information about every MSE Calls stubbed in this file.
+	   * @type {Object}
+	   */
+	  var MSE_CALLS = {};
+
+	  function getMSECalls() {
+	    return MSE_CALLS;
+	  }
+
+	  function resetMSECalls() {
+	    Object.keys(MSE_CALLS).forEach(function (key) {
+	      delete MSE_CALLS[key];
+	    });
+	  }
+	  var NativeMediaSource = window.MediaSource;
+	  var NativeSourceBuffer = window.SourceBuffer;
+
+	  /**
+	   * Define the logger for the MSE-spy.
+	   * Allows to re-define a specific logger on runtime / before applying this
+	   * script.
+	   * @type {Object}
+	   */
+	  var Logger = window.MSESpyLogger || {
+	    /* eslint-disable no-console */
+
+	    /**
+	     * Triggered each time a property is accessed.
+	     * @param {string} pathString - human-readable path to the property.
+	     * @param {*} value - the value it currently has.
+	     */
+	    onPropertyAccess: function onPropertyAccess(pathString, value) {
+	      console.debug(">>> Getting " + pathString + ":", value);
+	    },
+
+
+	    /**
+	     * Triggered each time a property is set.
+	     * @param {string} pathString - human-readable path to the property.
+	     * @param {*} value - the value it is set to.
+	     */
+	    onSettingProperty: function onSettingProperty(pathString, value) {
+	      console.debug(">> Setting " + pathString + ":", value);
+	    },
+
+
+	    /**
+	     * Triggered when some object is instanciated (just before).
+	     * @param {string} objectName - human-readable name for the concerned object.
+	     * @param {Array.<*>} args - Arguments given to the constructor
+	     */
+	    onObjectInstanciation: function onObjectInstanciation(objectName, args) {
+	      if (args.length) {
+	        console.debug(">>> Creating " + objectName + " with arguments:", args);
+	      } else {
+	        console.debug(">>> Creating " + objectName);
+	      }
+	    },
+
+
+	    /**
+	     * Triggered when an Object instanciation failed.
+	     * @param {string} objectName - human-readable name for the concerned object.
+	     * @param {Error} error - Error thrown by the constructor
+	     */
+	    onObjectInstanciationError: function onObjectInstanciationError(objectName, error) {
+	      console.error(">> " + objectName + " creation failed:", error);
+	    },
+
+
+	    /**
+	     * Triggered when an Object instanciation succeeded.
+	     * @param {string} objectName - human-readable name for the concerned object.
+	     * @param {*} value - The corresponding object instanciated.
+	     */
+	    onObjectInstanciationSuccess: function onObjectInstanciationSuccess(objectName, value) {
+	      console.debug(">>> " + objectName + " created:", value);
+	    },
+
+
+	    /**
+	     * Triggered when some method/function is called.
+	     * @param {string} pathName - human-readable path for the concerned function.
+	     * @param {Array.<*>} args - Arguments given to this function.
+	     */
+	    onFunctionCall: function onFunctionCall(pathName, args) {
+	      if (args.length) {
+	        console.debug(">>> " + pathName + " called with arguments:", args);
+	      } else {
+	        console.debug(">>> " + pathName + " called");
+	      }
+	    },
+
+
+	    /**
+	     * Triggered when a function call fails.
+	     * @param {string} pathName - human-readable path for the concerned function.
+	     * @param {Error} error - Error thrown by the call
+	     */
+	    onFunctionCallError: function onFunctionCallError(pathName, error) {
+	      console.error(">> " + pathName + " failed:", error);
+	    },
+
+
+	    /**
+	     * Triggered when a function call succeeded.
+	     * @param {string} pathName - human-readable path for the concerned function.
+	     * @param {*} value - The result of the function
+	     */
+	    onFunctionCallSuccess: function onFunctionCallSuccess(pathName, value) {
+	      console.info(">>> " + pathName + " succeeded:", value);
+	    },
+
+
+	    /**
+	     * Triggered when a function returned a Promise and that promise resolved.
+	     * @param {string} pathName - human-readable path for the concerned function.
+	     * @param {*} value - The value when the function resolved.
+	     */
+	    onFunctionPromiseResolve: function onFunctionPromiseResolve(pathName, value) {
+	      console.info(">>> " + pathName + " resolved:", value);
+	    },
+
+
+	    /**
+	     * Triggered when a function returned a Promise and that promise rejected.
+	     * @param {string} pathName - human-readable path for the concerned function.
+	     * @param {*} value - The error when the function's promise rejected.
+	     */
+	    onFunctionPromiseReject: function onFunctionPromiseReject(pathName, value) {
+	      console.error(">>> " + pathName + " rejected:", value);
+	    }
+	  };
+
+	  var id = 0;
+
+	  /**
+	   * Generate a new number each time it is called.
+	   * /!\ Never check for an upper-bound. Please do not use if you can reach
+	   * `Number.MAX_VALUE`
+	   * @returns {number}
+	   */
+	  function generateId() {
+	    return id++;
+	  }
+
+	  /**
+	   * Log multiple method calls for an object.
+	   * Also populates an object with multiple data at the time of the call.
+	   *
+	   * @param {Object} baseObject - Object in which the method/function is.
+	   * For example to spy on the Date method `toLocaleDateString`, you will have to
+	   * set here `Date.prototype`.
+	   * @param {Array.<string>} methodNames - Every methods you want to spy on
+	   * @param {string} humanReadablePath - Path to the method. Used for logging
+	   * purposes.
+	   * For example `"Date.prototype"`, for spies of Date's methods.
+	   * @param {Object} logObject - Object where infos about the method calls will be
+	   * added.
+	   * The methods' name will be the key of the object.
+	   *
+	   * The values will be an array of object with the following properties:
+	   *
+	   *   - self {Object}: Reference to the baseObject argument.
+	   *
+	   *   - id {number}: a uniquely generated ascending ID for any stubbed
+	   *    property/methods with this library.
+	   *
+	   *   - date {number}: Timestamp at the time of the call.
+	   *
+	   *   - args {Array}: Array of arguments given to the function
+	   *
+	   *   - response {*}: Response of the function.
+	   *     The property is not defined if the function did not respond yet or was on
+	   *     error.
+	   *
+	   *   - responseDate {number}: Timestamp at the time of the response.
+	   *     The property is not defined if the function did not respond yet or was on
+	   *     error.
+	   *
+	   *   - error {*}: Error thrown by the function, if one.
+	   *     The property is not defined if the function did not throw.
+	   *
+	   *   - errorDate {number} Timestamp at the time of the error.
+	   *     The property is not defined if the function did not throw.
+	   *
+	   *   - responseResolved {*}: When the returned value (the response) is a promise
+	   *     and that promise resolved, this property contains the value emitted by
+	   *     the resolve. Else, that property is not set.
+	   *
+	   *   - responseResolvedDate {number}: When the returned value (the response) is
+	   *     a promise and that promise resolved, this property contains the date at
+	   *     which the promise resolved. Else, that property is not set.
+	   *
+	   *   - responseRejected {*}: When the returned value (the response) is a promise
+	   *     and that promise rejected, this property contains the error emitted by
+	   *     the reject. Else, that property is not set.
+	   *
+	   *   - responseRejectedDate {number}: When the returned value (the response) is
+	   *     a promise and that promise rejected, this property contains the date at
+	   *     which the promise rejected. Else, that property is not set.
+	   *
+	   * @returns {Function} - function which deactivates the spy when called.
+	   */
+	  function spyOnMethods(baseObject, methodNames, humanReadablePath, logObject) {
+	    var baseObjectMethods = methodNames.reduce(function (acc, methodName) {
+	      acc[methodName] = baseObject[methodName];
+	      return acc;
+	    }, {});
+
+	    var _loop = function _loop(i) {
+	      var methodName = methodNames[i];
+	      var completePath = humanReadablePath + "." + methodName;
+	      var oldMethod = baseObject[methodName];
+
+	      if (!oldMethod) {
+	        throw new Error("No method in " + completePath);
+	      }
+
+	      baseObject[methodName] = function () {
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	          args[_key] = arguments[_key];
+	        }
+
+	        Logger.onFunctionCall(completePath, args);
+	        var currentLogObject = {
+	          self: baseObject,
+	          id: generateId(),
+	          date: Date.now(),
+	          args: args
+	        };
+
+	        if (!logObject[methodName]) {
+	          logObject[methodName] = [];
+	        }
+	        logObject[methodName].push(currentLogObject);
+
+	        var res = void 0;
+	        try {
+	          res = oldMethod.apply(this, args);
+	        } catch (e) {
+	          Logger.onFunctionCallError(completePath, e);
+	          currentLogObject.error = e;
+	          currentLogObject.errorDate = Date.now();
+	          throw e;
+	        }
+	        Logger.onFunctionCallSuccess(completePath, res);
+	        currentLogObject.response = res;
+	        currentLogObject.responseDate = Date.now();
+
+	        if (res instanceof Promise) {
+	          res.then(
+	          // on success
+	          function (value) {
+	            Logger.onFunctionPromiseResolve(completePath, value);
+	            currentLogObject.responseResolved = value;
+	            currentLogObject.responseResolvedDate = Date.now();
+	          },
+
+	          // on error
+	          function (err) {
+	            Logger.onFunctionPromiseReject(completePath, err);
+	            currentLogObject.responseRejected = err;
+	            currentLogObject.responseRejectedDate = Date.now();
+	          });
+	        }
+	        return res;
+	      };
+	    };
+
+	    for (var i = 0; i < methodNames.length; i++) {
+	      _loop(i);
+	    }
+
+	    return function stopSpyingOnMethods() {
+	      for (var i = 0; i < methodNames.length; i++) {
+	        var _methodName = methodNames[i];
+	        baseObject[_methodName] = baseObjectMethods[_methodName];
+	      }
+	    };
+	  }
+
+	  /**
+	   * Spy access and updates of an Object's read-only properties:
+	   *   - log every access/updates
+	   *   - add entries in a logging object
+	   *
+	   * @param {Object} baseObject - Object in which the property is.
+	   * For example to spy on the HTMLMediaElement property `currentTime`, you will
+	   * have to set here `HTMLMediaElement.prototype`.
+	   * @param {Object} baseDescriptors - Descriptors for the spied properties.
+	   * The keys are the properties' names, the values are the properties'
+	   * descriptors.
+	   * @param {Array.<string>} propertyNames - Every properties you want to spy on.
+	   * @param {string} humanReadablePath - Path to the property. Used for logging
+	   * purposes.
+	   * For example `"HTMLMediaElement.prototype"`, for spies of HTMLMediaElement's
+	   * class properties.
+	   * @param {Object} logObject - Object where infos about the properties access
+	   * will be added.
+	   * The methods' name will be the key of the object.
+	   *
+	   * The values will be an object with a single key ``get``, corresponding to
+	   * property accesses
+	   *
+	   * This key will then have as value an array of object.
+	   *
+	   *  - self {Object}: Reference to the baseObject argument.
+	   *
+	   *  - id {number}: a uniquely generated ID for any stubbed property/methods with
+	   *    this library.
+	   *
+	   *  - date {number}: Timestamp at the time of the property access.
+	   *
+	   *  - value {*}: value of the property at the time of access.
+	   *
+	   * @returns {Function} - function which deactivates the spy when called.
+	   */
+	  function spyOnReadOnlyProperties(baseObject, baseDescriptors, propertyNames, humanReadablePath, logObject) {
+	    var _loop = function _loop(i) {
+	      var propertyName = propertyNames[i];
+	      var baseDescriptor = baseDescriptors[propertyName];
+	      var completePath = humanReadablePath + "." + propertyName;
+
+	      if (!baseDescriptor) {
+	        throw new Error("No descriptor for property " + completePath);
+	      }
+
+	      Object.defineProperty(baseObject, propertyName, {
+	        get: function get() {
+	          var value = baseDescriptor.get.bind(this)();
+	          Logger.onPropertyAccess(completePath, value);
+	          var currentLogObject = {
+	            self: this,
+	            id: generateId(),
+	            date: Date.now(),
+	            value: value
+	          };
+	          if (!logObject[propertyName]) {
+	            logObject[propertyName] = {
+	              get: []
+	            };
+	          }
+	          logObject[propertyName].get.push(currentLogObject);
+	          return value;
+	        }
+	      });
+	    };
+
+	    for (var i = 0; i < propertyNames.length; i++) {
+	      _loop(i);
+	    }
+
+	    return function stopSpyingOnReadOnlyProperties() {
+	      Object.defineProperties(baseObject, propertyNames.reduce(function (acc, propertyName) {
+	        acc[propertyName] = baseDescriptors[propertyName];
+	        return acc;
+	      }, {}));
+	    };
+	  }
+
+	  /**
+	   * Spy access and updates of an Object's read & write properties:
+	   *   - log every access/updates
+	   *   - add entries in a logging object
+	   *
+	   * @param {Object} baseObject - Object in which the property is.
+	   * For example to spy on the HTMLMediaElement property `currentTime`, you will
+	   * have to set here `HTMLMediaElement.prototype`.
+	   * @param {Object} baseDescriptors - Descriptors for the spied properties.
+	   * The keys are the properties' names, the values are the properties'
+	   * descriptors.
+	   * @param {Array.<string>} propertyNames - Every properties you want to spy on.
+	   * @param {string} humanReadablePath - Path to the property. Used for logging
+	   * purposes.
+	   * For example `"HTMLMediaElement.prototype"`, for spies of HTMLMediaElement's
+	   * class properties.
+	   * @param {Object} logObject - Object where infos about the properties access
+	   * will be added.
+	   * The methods' name will be the key of the object.
+	   *
+	   * The values will be an object with two keys ``get`` and ``set``, respectively
+	   * for property accesses and property updates.
+	   *
+	   * Each one of those properties will then have as values an array of object.
+	   * Those objects are under the following form:
+	   *
+	   *  1. for `get` (property access):
+	   *
+	   *   - self {Object}: Reference to the baseObject argument.
+	   *
+	   *  - id {number}: a uniquely generated ascending ID for any stubbed
+	   *    property/methods with this library.
+	   *
+	   *   - date {number}: Timestamp at the time of the property access.
+	   *
+	   *   - value {*}: value of the property at the time of access.
+	   *
+	   *
+	   *  2. for `set` (property updates):
+	   *
+	   *   - self {Object}: Reference to the baseObject argument.
+	   *
+	   *  - id {number}: a uniquely generated ascending ID for any stubbed
+	   *    property/methods with this library.
+	   *
+	   *   - date {number}: Timestamp at the time of the property update.
+	   *
+	   *   - value {*}: new value the property is set to
+	   *
+	   * @returns {Function} - function which deactivates the spy when called.
+	   */
+	  function spyOnProperties(baseObject, baseDescriptors, propertyNames, humanReadablePath, logObject) {
+	    var _loop = function _loop(i) {
+	      var propertyName = propertyNames[i];
+	      var baseDescriptor = baseDescriptors[propertyName];
+	      var completePath = humanReadablePath + "." + propertyName;
+
+	      if (!baseDescriptor) {
+	        throw new Error("No descriptor for property " + completePath);
+	      }
+
+	      Object.defineProperty(baseObject, propertyName, {
+	        get: function get() {
+	          var value = baseDescriptor.get.bind(this)();
+	          Logger.onPropertyAccess(completePath, value);
+	          var currentLogObject = {
+	            self: this,
+	            id: generateId(),
+	            date: Date.now(),
+	            value: value
+	          };
+
+	          if (!logObject[propertyName]) {
+	            logObject[propertyName] = {
+	              set: [],
+	              get: []
+	            };
+	          }
+	          logObject[propertyName].get.push(currentLogObject);
+
+	          return value;
+	        },
+	        set: function set(value) {
+	          Logger.onSettingProperty(completePath, value);
+	          var currentLogObject = {
+	            self: this,
+	            id: generateId(),
+	            date: Date.now(),
+	            value: value
+	          };
+
+	          if (!logObject[propertyName]) {
+	            logObject[propertyName] = {
+	              set: [],
+	              get: []
+	            };
+	          }
+	          logObject[propertyName].set.push(currentLogObject);
+	          baseDescriptor.set.bind(this)(value);
+	        }
+	      });
+	    };
+
+	    for (var i = 0; i < propertyNames.length; i++) {
+	      _loop(i);
+	    }
+
+	    return function stopSpyingOnProperties() {
+	      Object.defineProperties(baseObject, propertyNames.reduce(function (acc, propertyName) {
+	        acc[propertyName] = baseDescriptors[propertyName];
+	        return acc;
+	      }, {}));
+	    };
+	  }
+
+	  var stubbedObjects = [];
+	  function spyOnWholeObject(BaseObject, objectName, readOnlyPropertyNames, propertyNames, staticMethodNames, methodNames, loggingObject) {
+	    if (BaseObject == null || !BaseObject.prototype) {
+	      throw new Error("Invalid object");
+	    }
+	    if (stubbedObjects.includes(BaseObject)) {
+	      return;
+	    }
+
+	    if (loggingObject[objectName] == null) {
+	      loggingObject[objectName] = {
+	        new: [],
+	        methods: {},
+	        staticMethods: {},
+	        properties: {},
+	        eventListeners: {} // TODO
+	      };
+	    }
+
+	    function StubbedObject() {
+	      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	        args[_key] = arguments[_key];
+	      }
+
+	      Logger.onObjectInstanciation(objectName, args);
+	      var now = Date.now();
+	      var spyObj = {
+	        date: now,
+	        args: args
+	      };
+	      loggingObject[objectName].new.push(spyObj);
+	      var baseObject = void 0;
+	      try {
+	        baseObject = new (Function.prototype.bind.apply(BaseObject, [null].concat(args)))();
+	      } catch (e) {
+	        Logger.onObjectInstanciationError(objectName, e);
+	        spyObj.error = e;
+	        spyObj.errorDate = Date.now();
+	        throw e;
+	      }
+	      Logger.onObjectInstanciationSuccess(objectName, baseObject);
+	      spyObj.response = baseObject;
+	      spyObj.responseDate = Date.now();
+	      return baseObject;
+	    }
+
+	    var unspyStaticMethods = spyOnMethods(BaseObject, staticMethodNames, objectName, loggingObject[objectName].staticMethods);
+	    staticMethodNames.forEach(function (method) {
+	      StubbedObject[method] = BaseObject[method].bind(BaseObject);
+	    });
+
+	    var BaseObjectProtoDescriptors = Object.getOwnPropertyDescriptors(BaseObject.prototype);
+
+	    var unspyReadOnlyProps = spyOnReadOnlyProperties(BaseObject.prototype, BaseObjectProtoDescriptors, readOnlyPropertyNames, objectName + ".prototype", loggingObject[objectName].properties);
+	    var unspyProps = spyOnProperties(BaseObject.prototype, BaseObjectProtoDescriptors, propertyNames, objectName + ".prototype", loggingObject[objectName].properties);
+	    var unspyMethods = spyOnMethods(BaseObject.prototype, methodNames, objectName + ".prototype", loggingObject[objectName].methods);
+	    window[objectName] = StubbedObject;
+	    stubbedObjects.push(BaseObject);
+
+	    return function stopSpying() {
+	      unspyReadOnlyProps();
+	      unspyProps();
+	      unspyStaticMethods();
+	      unspyMethods();
+	      window[objectName] = BaseObject;
+	    };
+	  }
+
+	  function spyOnMediaSource() {
+	    return spyOnWholeObject(
+	    // Object to spy on
+	    NativeMediaSource,
+
+	    // name in window
+	    "MediaSource",
+
+	    // read-only properties
+	    ["sourceBuffers", "activeSourceBuffers", "readyState"],
+
+	    // regular properties
+	    ["duration", "onsourceopen", "onsourceended", "onsourceclose"],
+
+	    // static methods
+	    ["isTypeSupported"],
+
+	    // methods
+	    ["addEventListener", "removeEventListener", "dispatchEvent", "addSourceBuffer", "removeSourceBuffer", "endOfStream", "setLiveSeekableRange", "clearLiveSeekableRange"],
+
+	    // global logging object
+	    MSE_CALLS);
+	  }
+
+	  function spyOnMediaSource$1() {
+	    return spyOnWholeObject(
+	    // Object to spy on
+	    NativeSourceBuffer,
+
+	    // name in window
+	    "SourceBuffer",
+
+	    // read-only properties
+	    ["updating", "buffered"],
+
+	    // regular properties
+	    ["mode", "timestampOffset", "appendWindowStart", "appendWindowEnd", "onupdate", "onupdatestart", "onupdateend", "onerror", "onabort"],
+
+	    // static methods
+	    [],
+
+	    // methods
+	    ["addEventListener", "removeEventListener", "dispatchEvent", "appendBuffer", "abort", "remove"],
+
+	    // global logging object
+	    MSE_CALLS);
+	  }
+
+	  var resetSpies = null;
+
+	  /**
+	   * Start/restart spying on MSE API calls.
+	   */
+	  function start() {
+	    if (resetSpies) {
+	      resetSpies();
+	    }
+
+	    var resetSpyFunctions = [];
+	    var resetMediaSource = spyOnMediaSource();
+	    if (resetMediaSource) {
+	      resetSpyFunctions.push(resetMediaSource);
+	    }
+
+	    var resetSourceBuffer = spyOnMediaSource$1();
+	    if (resetSourceBuffer) {
+	      resetSpyFunctions.push(resetSourceBuffer);
+	    }
+
+	    resetSpies = function resetEverySpies() {
+	      resetSpyFunctions.forEach(function (fn) {
+	        fn && fn();
+	      });
+	      resetSpyFunctions.length = 0;
+	      resetSpies = null;
+	    };
+	  }
+
+	  /**
+	   * Stop spying on MSE API calls.
+	   */
 	  function stop() {
-	    stopSpyingOnMediaSource();
-	    stopSpyingOnSourceBuffer();
+	    if (resetSpies) {
+	      resetSpies();
+	    }
 	  }
 
 	  exports.getMSECalls = getMSECalls;

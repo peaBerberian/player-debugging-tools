@@ -4,9 +4,9 @@
   "description": "",
   "main": "dist/bundle.js",
   "dependencies": {
-    "eme-spy": "^0.1.1",
+    "eme-spy": "^0.2.0",
     "isobmff-inspector": "^0.1.0",
-    "mse-spy": "^0.3.1"
+    "mse-spy": "^0.5.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
