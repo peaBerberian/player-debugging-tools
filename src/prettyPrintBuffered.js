@@ -68,8 +68,10 @@ function prettyPrintVideoBuffer() {
     throw new Error("No video in the page");
   }
   if (videoElts.length > 1) {
+    /* eslint-disable no-console */
     console.warn("There is multiple video elements in the page, " +
       "only using the first one.");
+    /* eslint-enable no-console */
   }
   return prettyPrintMediaElementBuffer(videoElts[0]);
 }

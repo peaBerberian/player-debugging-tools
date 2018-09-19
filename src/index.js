@@ -1,3 +1,4 @@
+export { addSpy } from "./addSpy";
 export { EMESpy } from "./EMESpy";
 export { MSESpy } from "./MSESpy";
 export { inspectISOBMFF } from "./inspectISOBMFF";
