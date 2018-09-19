@@ -200,3 +200,44 @@ To simplify its use, you can also call instead:
     ```
     Again, as there is only one video element, this is the variation I use the
     most.
+
+
+### addSpy #####################################################################
+
+``addSpy`` is a function allowing you to spy on a function:
+  - display log each time the function is called with its arguments
+  - display log each time the function returns with the return value
+  - optionally add a debugger statement to have a breakpoint each time it is
+    called.
+
+ It is accessible through ``PlayerTools.addSpy``.
+
+ It takes two or three arguments:
+   1. spiedObject {Object} - Object in which the function you want to spy on is
+      in.
+   2. fnName {string} - name of the function in `obj`
+   3. addDebugger {boolean|undefined} - If true, a debugger statement is added
+      for each time the function is called. This value is optional.
+
+This function returns another function which allows to remove the spy when
+called.
+
+#### Example
+
+```js
+// simple appendBuffer spy
+// Will display two logs each times it is called:
+//   - When it is called with the corresponding argument
+//   - When it returned with the corresponding return value
+let removeSpy = addSpy(SourceBuffer.prototype, "appendBuffer");
+
+// Remove that spy
+removeSpy();
+
+// Same but add a debugger (a breakpoint basically) before the function is
+// really called.
+let removeSpy = addSpy(SourceBuffer.prototype, "appendBuffer", true);
+
+// Remove that spy
+removeSpy();
+```
