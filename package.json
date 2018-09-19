@@ -18,7 +18,6 @@
     "rollup-plugin-node-resolve": "^3.3.0"
   },
   "scripts": {
-    "builda": "webpack -c webpack.config.js",
     "build": "rollup -c",
     "lint": "eslint src/**/*.js",
     "test": "echo \"Error: no test specified\" && exit 1"
