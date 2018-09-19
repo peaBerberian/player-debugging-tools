@@ -112,11 +112,10 @@ const firstVideoElt = document.getElementsByTagName("video")[0];
 PlayerTools.prettyPrintBuffered(firstVideoElt.buffered);
 
 // Result:
-// "|0.00----(29.95)----|29.95 <30.05> |60.00----(29.86)----|89.86 <9.98>
-// |99.85----(20.15)----|120.00"
-// Note: the line feed here is to respect a max-column limit.
-// This means that our video element has 29.95 seconds of buffer between 0 and
-// 29.95 seconds.
+// "|0.00----(29.95)----|29.95 <30.05> |60.00----(29.86)----|89.86 <9.98>|99.85----(20.15)----|120.00"
+//
+// That result means that our video element has 29.95 seconds of buffer between
+// 0 and 29.95 seconds.
 // Then 30.05 seconds where no buffer is found.
 // Then 29.86 seconds of buffer between 60.00 and 89.86 seconds.
 // Then 9.98 seconds where no buffer is found.
@@ -234,7 +233,7 @@ let removeSpy = addSpy(SourceBuffer.prototype, "appendBuffer");
 // Remove that spy
 removeSpy();
 
-// Same but add a debugger (a breakpoint basically) before the function is
+// Same but adds a debugger (a breakpoint basically) before the function is
 // really called.
 let removeSpy = addSpy(SourceBuffer.prototype, "appendBuffer", true);
 
