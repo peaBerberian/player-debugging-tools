@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (global = global || self, factory(global.PlayerTools = {}));
-}(this, function (exports) { 'use strict';
+}(this, (function (exports) { 'use strict';
 
   /**
    * Spy on a function:
@@ -65,8 +65,8 @@
 
   var bundle = createCommonjsModule(function (module, exports) {
   (function (global, factory) {
-    factory(exports);
-  }(commonjsGlobal, function (exports) {
+     factory(exports) ;
+  }(commonjsGlobal, (function (exports) {
     /**
      * Store information about every EME Calls stubbed in this file.
      * @type {Object}
@@ -193,6 +193,8 @@
       onFunctionPromiseReject: function onFunctionPromiseReject(pathName, value) {
         console.error(">>> ".concat(pathName, " rejected:"), value);
       }
+      /* eslint-enable no-console */
+
     };
 
     function _setPrototypeOf(o, p) {
@@ -204,7 +206,7 @@
       return _setPrototypeOf(o, p);
     }
 
-    function isNativeReflectConstruct() {
+    function _isNativeReflectConstruct() {
       if (typeof Reflect === "undefined" || !Reflect.construct) return false;
       if (Reflect.construct.sham) return false;
       if (typeof Proxy === "function") return true;
@@ -218,7 +220,7 @@
     }
 
     function _construct(Parent, args, Class) {
-      if (isNativeReflectConstruct()) {
+      if (_isNativeReflectConstruct()) {
         _construct = Reflect.construct;
       } else {
         _construct = function _construct(Parent, args, Class) {
@@ -317,7 +319,8 @@
         var oldMethod = baseObject[methodName];
 
         if (!oldMethod) {
-          throw new Error("No method in " + completePath);
+          console.warn("No method in " + completePath);
+          return "continue";
         }
 
         baseObject[methodName] = function () {
@@ -372,12 +375,14 @@
       };
 
       for (var i = 0; i < methodNames.length; i++) {
-        _loop(i);
+        var _ret = _loop(i);
+
+        if (_ret === "continue") continue;
       }
 
       return function stopSpyingOnMethods() {
-        for (var i = 0; i < methodNames.length; i++) {
-          var methodName = methodNames[i];
+        for (var _i = 0; _i < methodNames.length; _i++) {
+          var methodName = methodNames[_i];
           baseObject[methodName] = baseObjectMethods[methodName];
         }
       };
@@ -427,7 +432,8 @@
         var completePath = humanReadablePath + "." + propertyName;
 
         if (!baseDescriptor) {
-          throw new Error("No descriptor for property " + completePath);
+          console.warn("No descriptor for property " + completePath);
+          return "continue";
         }
 
         Object.defineProperty(baseObject, propertyName, {
@@ -454,7 +460,9 @@
       };
 
       for (var i = 0; i < propertyNames.length; i++) {
-        _loop(i);
+        var _ret = _loop(i);
+
+        if (_ret === "continue") continue;
       }
 
       return function stopSpyingOnReadOnlyProperties() {
@@ -524,7 +532,8 @@
         var completePath = humanReadablePath + "." + propertyName;
 
         if (!baseDescriptor) {
-          throw new Error("No descriptor for property " + completePath);
+          console.warn("No descriptor for property " + completePath);
+          return "continue";
         }
 
         Object.defineProperty(baseObject, propertyName, {
@@ -571,7 +580,9 @@
       };
 
       for (var i = 0; i < propertyNames.length; i++) {
-        _loop(i);
+        var _ret = _loop(i);
+
+        if (_ret === "continue") continue;
       }
 
       return function stopSpyingOnProperties() {
@@ -727,15 +738,15 @@
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-  }));
+  })));
   });
 
   var EMESpy = unwrapExports(bundle);
 
   var bundle$1 = createCommonjsModule(function (module, exports) {
   (function (global, factory) {
-    factory(exports);
-  }(commonjsGlobal, function (exports) {
+     factory(exports) ;
+  }(commonjsGlobal, (function (exports) {
     /**
      * Store information about every MSE Calls stubbed in this file.
      * @type {Object}
@@ -861,6 +872,8 @@
       onFunctionPromiseReject: function onFunctionPromiseReject(pathName, value) {
         console.error(">>> ".concat(pathName, " rejected:"), value);
       }
+      /* eslint-enable no-console */
+
     };
 
     function _setPrototypeOf(o, p) {
@@ -872,7 +885,7 @@
       return _setPrototypeOf(o, p);
     }
 
-    function isNativeReflectConstruct() {
+    function _isNativeReflectConstruct() {
       if (typeof Reflect === "undefined" || !Reflect.construct) return false;
       if (Reflect.construct.sham) return false;
       if (typeof Proxy === "function") return true;
@@ -886,7 +899,7 @@
     }
 
     function _construct(Parent, args, Class) {
-      if (isNativeReflectConstruct()) {
+      if (_isNativeReflectConstruct()) {
         _construct = Reflect.construct;
       } else {
         _construct = function _construct(Parent, args, Class) {
@@ -985,7 +998,8 @@
         var oldMethod = baseObject[methodName];
 
         if (!oldMethod) {
-          throw new Error("No method in " + completePath);
+          console.warn("No method in " + completePath);
+          return "continue";
         }
 
         baseObject[methodName] = function () {
@@ -1040,12 +1054,14 @@
       };
 
       for (var i = 0; i < methodNames.length; i++) {
-        _loop(i);
+        var _ret = _loop(i);
+
+        if (_ret === "continue") continue;
       }
 
       return function stopSpyingOnMethods() {
-        for (var i = 0; i < methodNames.length; i++) {
-          var methodName = methodNames[i];
+        for (var _i = 0; _i < methodNames.length; _i++) {
+          var methodName = methodNames[_i];
           baseObject[methodName] = baseObjectMethods[methodName];
         }
       };
@@ -1095,7 +1111,8 @@
         var completePath = humanReadablePath + "." + propertyName;
 
         if (!baseDescriptor) {
-          throw new Error("No descriptor for property " + completePath);
+          console.warn("No descriptor for property " + completePath);
+          return "continue";
         }
 
         Object.defineProperty(baseObject, propertyName, {
@@ -1122,7 +1139,9 @@
       };
 
       for (var i = 0; i < propertyNames.length; i++) {
-        _loop(i);
+        var _ret = _loop(i);
+
+        if (_ret === "continue") continue;
       }
 
       return function stopSpyingOnReadOnlyProperties() {
@@ -1192,7 +1211,8 @@
         var completePath = humanReadablePath + "." + propertyName;
 
         if (!baseDescriptor) {
-          throw new Error("No descriptor for property " + completePath);
+          console.warn("No descriptor for property " + completePath);
+          return "continue";
         }
 
         Object.defineProperty(baseObject, propertyName, {
@@ -1239,7 +1259,9 @@
       };
 
       for (var i = 0; i < propertyNames.length; i++) {
-        _loop(i);
+        var _ret = _loop(i);
+
+        if (_ret === "continue") continue;
       }
 
       return function stopSpyingOnProperties() {
@@ -1391,15 +1413,15 @@
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-  }));
+  })));
   });
 
   var MSESpy = unwrapExports(bundle$1);
 
   var bundle$2 = createCommonjsModule(function (module, exports) {
   (function (global, factory) {
-    module.exports = factory();
-  }(commonjsGlobal, function () {
+     module.exports = factory() ;
+  }(commonjsGlobal, (function () {
     /**
      * Translate groups of 2 big-endian bytes to Integer (from 0 up to 65535).
      * @param {TypedArray} bytes
@@ -2533,7 +2555,7 @@
 
     return parseBoxes;
 
-  }));
+  })));
   });
 
   /**
@@ -2775,4 +2797,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));
