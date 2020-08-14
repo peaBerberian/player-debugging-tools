@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.PlayerTools = {}));
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.PlayerTools = {}));
 }(this, (function (exports) { 'use strict';
 
   /**
@@ -2049,12 +2049,66 @@
           var i = ret.KID_count;
 
           while (i--) {
-            ret.KIDs.push(reader.bytesToASCII(16));
+            ret.KIDs.push([reader.bytesToHex(16)]);
           }
         }
 
         ret.data_length = reader.bytesToInt(4);
-        ret.data = reader.bytesToASCII(ret.data_length);
+        ret.data = reader.bytesToHex(ret.data_length);
+        return ret;
+      }
+    };
+
+    var saio = {
+      name: "Sample Auxiliary Information Offsets",
+      description: "",
+      parser: function parser(r) {
+        var ret = {};
+        ret.version = r.bytesToInt(1);
+        ret.flags = r.bytesToInt(3);
+
+        if (ret.flags == 1) {
+          ret.aux_info_type = r.bytesToInt(4);
+          ret.aux_info_type_parameter = r.bytesToInt(4);
+        }
+
+        ret.entry_count = r.bytesToInt(4);
+        ret.offset = [];
+        var i = ret.entry_count;
+
+        while (i--) {
+          ret.offset.push(r.bytesToInt(ret.version == 0 ? 4 : 8));
+        }
+
+        return ret;
+      }
+    };
+
+    var saiz = {
+      name: "Sample Auxiliary Information Sizes",
+      description: "",
+      parser: function parser(r) {
+        var ret = {};
+        ret.version = r.bytesToInt(1);
+        ret.flags = r.bytesToInt(3);
+
+        if (ret.flags == 1) {
+          ret.aux_info_type = r.bytesToInt(4);
+          ret.aux_info_type_parameter = r.bytesToInt(4);
+        }
+
+        ret.default_sample_info_size = r.bytesToInt(1);
+        ret.sample_count = r.bytesToInt(4);
+
+        if (ret.default_sample_info_size == 0) {
+          ret.sample_info_size = [];
+          var i = ret.sample_count;
+
+          while (i--) {
+            ret.sample_info_size.push(r.bytesToInt(1));
+          }
+        }
+
         return ret;
       }
     };
@@ -2132,6 +2186,112 @@
     var skip = {
       name: "Free Space Box",
       description: "This box can be completely ignored."
+    };
+
+    var stbl = {
+      name: "Sample Table",
+      description: "",
+      container: true
+    };
+
+    var stco = {
+      name: "Chunk Offset",
+      description: "",
+      parser: function parser(r) {
+        var ret = {};
+        ret.version = r.bytesToInt(1);
+        ret.flags = r.bytesToInt(3);
+        ret.entry_count = r.bytesToInt(4);
+        ret.chunk_offsets = [];
+        var i = ret.entry_count;
+
+        while (i--) {
+          ret.chunk_offsets.push(r.bytesToInt(4));
+        }
+
+        return ret;
+      }
+    };
+
+    var stsc = {
+      name: "Sample To Chunk",
+      description: "",
+      parser: function parser(r) {
+        var ret = {};
+        ret.version = r.bytesToInt(1);
+        ret.flags = r.bytesToInt(3);
+        ret.entry_count = r.bytesToInt(4);
+        ret.entries = [];
+        var i = ret.entry_count;
+
+        while (i--) {
+          var e = {};
+          e.first_chunk = r.bytesToInt(4);
+          e.samples_per_chunk = r.bytesToInt(4);
+          e.sample_description_index = r.bytesToInt(4);
+          ret.entries.push(e);
+        }
+
+        return ret;
+      }
+    };
+
+    var stsd = {
+      name: "Sample Description",
+      description: "Information about the coding type used",
+      parser: function parser(r) {
+        var ret = {};
+        ret.version = r.bytesToInt(1);
+        ret.flags = r.bytesToInt(3);
+        ret.entry_count = r.bytesToInt(4);
+        return ret;
+      },
+      container: true
+    };
+
+    var stsz = {
+      name: "Sample Size",
+      description: "",
+      parser: function parser(r) {
+        var ret = {};
+        ret.version = r.bytesToInt(1);
+        ret.flags = r.bytesToInt(3);
+        ret.sample_size = r.bytesToInt(4);
+        ret.sample_count = r.bytesToInt(4);
+
+        if (ret.sample_size == 0) {
+          ret.entries = [];
+          var i = ret.sample_count;
+
+          while (i--) {
+            ret.entries.push(r.bytesToInt(4));
+          }
+        }
+
+        return ret;
+      }
+    };
+
+    var stts = {
+      name: "Decoding Time to Sample",
+      description: "",
+      parser: function parser(r) {
+        var ret = {};
+        ret.version = r.bytesToInt(1);
+        ret.flags = r.bytesToInt(3);
+        ret.entry_count = r.bytesToInt(4);
+        ret.entries = [];
+        var i = ret.entry_count;
+
+        while (i--) {
+          var e = {};
+          e.sample_count = r.bytesToInt(4);
+          e.sample_delta = r.bytesToInt(4);
+          ret.entries.push(e);
+        }
+
+        return ret;
+      }
     };
 
     var styp = {
@@ -2404,9 +2564,17 @@
       mvhd: mvhd,
       pdin: pdin,
       pssh: pssh,
+      saio: saio,
+      saiz: saiz,
       sdtp: sdtp,
       sidx: sidx,
       skip: skip,
+      stbl: stbl,
+      stco: stco,
+      stsc: stsc,
+      stsd: stsd,
+      stsz: stsz,
+      stts: stts,
       styp: styp,
       tfdt: tfdt,
       tfhd: tfhd,
