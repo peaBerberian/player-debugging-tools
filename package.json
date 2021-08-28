@@ -4,15 +4,15 @@
   "description": "",
   "main": "dist/bundle.js",
   "dependencies": {
-    "eme-spy": "0.2.2",
-    "isobmff-inspector": "0.2.0",
-    "mse-spy": "0.5.2"
+    "eme-spy": "0.2.3",
+    "isobmff-inspector": "0.2.1",
+    "mse-spy": "0.5.3"
   },
   "devDependencies": {
-    "@babel/core": "7.11.1",
-    "@babel/preset-env": "7.11.0",
-    "eslint": "7.6.0",
-    "rollup": "2.25.0",
+    "@babel/core": "7.15.0",
+    "@babel/preset-env": "7.15.0",
+    "eslint": "7.32.0",
+    "rollup": "2.56.3",
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0"
