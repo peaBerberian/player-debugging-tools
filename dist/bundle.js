@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.PlayerTools = {}));
-}(this, (function (exports) { 'use strict';
+})(this, (function (exports) { 'use strict';
 
   /**
    * Spy on a function:
@@ -63,10 +63,10 @@
   	return module = { exports: {} }, fn(module, module.exports), module.exports;
   }
 
-  var bundle = createCommonjsModule(function (module, exports) {
+  var bundle$2 = createCommonjsModule(function (module, exports) {
   (function (global, factory) {
-     factory(exports) ;
-  }(commonjsGlobal, (function (exports) {
+    factory(exports) ;
+  })(commonjsGlobal, (function (exports) {
     /**
      * Store information about every EME Calls stubbed in this file.
      * @type {Object}
@@ -212,7 +212,7 @@
       if (typeof Proxy === "function") return true;
 
       try {
-        Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+        Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
         return true;
       } catch (e) {
         return false;
@@ -319,6 +319,7 @@
         var oldMethod = baseObject[methodName];
 
         if (!oldMethod) {
+          /* eslint-disable-next-line no-console */
           console.warn("No method in " + completePath);
           return "continue";
         }
@@ -432,6 +433,7 @@
         var completePath = humanReadablePath + "." + propertyName;
 
         if (!baseDescriptor) {
+          /* eslint-disable-next-line no-console */
           console.warn("No descriptor for property " + completePath);
           return "continue";
         }
@@ -532,6 +534,7 @@
         var completePath = humanReadablePath + "." + propertyName;
 
         if (!baseDescriptor) {
+          /* eslint-disable-next-line no-console */
           console.warn("No descriptor for property " + completePath);
           return "continue";
         }
@@ -738,15 +741,15 @@
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-  })));
+  }));
   });
 
-  var EMESpy = unwrapExports(bundle);
+  var EMESpy = unwrapExports(bundle$2);
 
   var bundle$1 = createCommonjsModule(function (module, exports) {
   (function (global, factory) {
-     factory(exports) ;
-  }(commonjsGlobal, (function (exports) {
+    factory(exports) ;
+  })(commonjsGlobal, (function (exports) {
     /**
      * Store information about every MSE Calls stubbed in this file.
      * @type {Object}
@@ -891,7 +894,7 @@
       if (typeof Proxy === "function") return true;
 
       try {
-        Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+        Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
         return true;
       } catch (e) {
         return false;
@@ -1341,7 +1344,7 @@
       };
     }
 
-    function spyOnMediaSource() {
+    function spyOnMediaSource$1() {
       return spyOnWholeObject( // Object to spy on
       NativeMediaSource, // name in window
       "MediaSource", // read-only properties
@@ -1352,7 +1355,7 @@
       MSE_CALLS);
     }
 
-    function spyOnMediaSource$1() {
+    function spyOnMediaSource() {
       return spyOnWholeObject( // Object to spy on
       NativeSourceBuffer, // name in window
       "SourceBuffer", // read-only properties
@@ -1374,13 +1377,13 @@
       }
 
       var resetSpyFunctions = [];
-      var resetMediaSource = spyOnMediaSource();
+      var resetMediaSource = spyOnMediaSource$1();
 
       if (resetMediaSource) {
         resetSpyFunctions.push(resetMediaSource);
       }
 
-      var resetSourceBuffer = spyOnMediaSource$1();
+      var resetSourceBuffer = spyOnMediaSource();
 
       if (resetSourceBuffer) {
         resetSpyFunctions.push(resetSourceBuffer);
@@ -1413,15 +1416,15 @@
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-  })));
+  }));
   });
 
   var MSESpy = unwrapExports(bundle$1);
 
-  var bundle$2 = createCommonjsModule(function (module, exports) {
+  var bundle = createCommonjsModule(function (module, exports) {
   (function (global, factory) {
-     module.exports = factory() ;
-  }(commonjsGlobal, (function () {
+    module.exports = factory() ;
+  })(commonjsGlobal, (function () {
     /**
      * Translate groups of 2 big-endian bytes to Integer (from 0 up to 65535).
      * @param {TypedArray} bytes
@@ -2723,7 +2726,7 @@
 
     return parseBoxes;
 
-  })));
+  }));
   });
 
   /**
@@ -2955,7 +2958,7 @@
   exports.EMESpy = EMESpy;
   exports.MSESpy = MSESpy;
   exports.addSpy = addSpy;
-  exports.inspectISOBMFF = bundle$2;
+  exports.inspectISOBMFF = bundle;
   exports.prettyPrintBuffered = prettyPrintBuffered;
   exports.prettyPrintCurrentRanges = prettyPrintCurrentRanges;
   exports.prettyPrintMediaElementBuffer = prettyPrintMediaElementBuffer;
@@ -2965,4 +2968,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
